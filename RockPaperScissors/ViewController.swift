@@ -19,7 +19,8 @@ final class ViewController: UIViewController {
     private let pickPaperButton = UIButton(type: .system)
     private let pickScissorsButton = UIButton(type: .system)
     
-    var gameState: String? = "start"
+    private var gameState = ""
+    private var enemyGestures = ["rock", "paper", "scissors"]
     
     
     // MARK: - Life cycle
@@ -42,36 +43,13 @@ final class ViewController: UIViewController {
         gameNameLabel.textColor = .black
         
         gameStatusLabel.translatesAutoresizingMaskIntoConstraints = false
-        gameStatusLabel.text = ""
-        switch gameState {
-        case "start":
-            gameStatusLabel.text = ""
-
-        case "win":
-            gameStatusLabel.text = "WIN"
-            gameStatusLabel.textColor = .green
-
-        case "lose":
-            gameStatusLabel.text = "LOSE"
-            gameStatusLabel.textColor = .red
-
-        case "draw":
-            gameStatusLabel.text = "DRAW"
-            gameStatusLabel.textColor = .yellow
-
-        case .none:
-            gameStatusLabel.text = ""
-
-        case .some(_):
-            gameStatusLabel.text = ""
-        }
         gameStatusLabel.font = UIFont(name: "Copperplate-Bold", size: 50)
         
         enemyGestureImageView.translatesAutoresizingMaskIntoConstraints = false
-        enemyGestureImageView.image = UIImage(named: "rock")
+        enemyGestureImageView.image = UIImage(named: "")
         
         playerGestureImageView.translatesAutoresizingMaskIntoConstraints = false
-        playerGestureImageView.image = UIImage(named: "paper")
+        playerGestureImageView.image = UIImage(named: "")
         
         pickRockButton.translatesAutoresizingMaskIntoConstraints = false
         pickRockButton.setImage(UIImage(named: "rock"), for: .normal)
@@ -134,19 +112,61 @@ final class ViewController: UIViewController {
     }
     
     
+    // MARK: - Private methods
+    
+    private func gestureCompare(playerGesture: String, enemyGesture: String) {
+        playerGestureImageView.image = UIImage(named: playerGesture)
+        enemyGestureImageView.image = UIImage(named: enemyGesture)
+        enemyGestures.shuffle()
+        if playerGesture == enemyGesture {
+            gameState = "draw"
+        } else if playerGesture == "rock" && enemyGesture == "paper" {
+            gameState = "lose"
+        } else if playerGesture == "paper" && enemyGesture == "scissors" {
+            gameState = "lose"
+        } else if playerGesture == "scissors" && enemyGesture == "rock" {
+            gameState = "lose"
+        } else {
+            gameState = "win"
+        }
+        switch gameState {
+        case "start":
+            gameStatusLabel.text = ""
+
+        case "win":
+            gameStatusLabel.text = gameState
+            gameStatusLabel.textColor = .green
+
+        case "lose":
+            gameStatusLabel.text = "LOSE"
+            gameStatusLabel.textColor = .red
+
+        case "draw":
+            gameStatusLabel.text = "DRAW"
+            gameStatusLabel.textColor = .yellow
+        default:
+            gameStatusLabel.text = ""
+        }
+    }
+    
+    
     // MARK: - Actions
 
     @objc func didTapRockButton() {
-        print("rock")
+        gestureCompare(playerGesture: "rock", enemyGesture: enemyGestures[0])
+        print(gameState)
     }
     
     @objc func didTapPaperButton() {
-        print("paper")
+        gestureCompare(playerGesture: "paper", enemyGesture: enemyGestures[0])
+        print(gameState)
     }
     
     @objc func didTapScissorsButton() {
-        print("scissors")
+        gestureCompare(playerGesture: "scissors", enemyGesture: enemyGestures[0])
+        print(gameState)
     }
+    
     
 }
 
