@@ -47,9 +47,15 @@ final class ViewController: UIViewController {
         
         enemyGestureImageView.translatesAutoresizingMaskIntoConstraints = false
         enemyGestureImageView.image = UIImage(named: "")
+        enemyGestureImageView.backgroundColor = .red
+        enemyGestureImageView.layer.cornerRadius = 75
+        enemyGestureImageView.layer.masksToBounds = true
         
         playerGestureImageView.translatesAutoresizingMaskIntoConstraints = false
         playerGestureImageView.image = UIImage(named: "")
+        playerGestureImageView.backgroundColor = .blue
+        playerGestureImageView.layer.cornerRadius = 75
+        playerGestureImageView.layer.masksToBounds = true
         
         pickRockButton.translatesAutoresizingMaskIntoConstraints = false
         pickRockButton.setImage(UIImage(named: "rock"), for: .normal)
@@ -118,17 +124,16 @@ final class ViewController: UIViewController {
         playerGestureImageView.image = UIImage(named: playerGesture)
         enemyGestureImageView.image = UIImage(named: enemyGesture)
         enemyGestures.shuffle()
-        if playerGesture == enemyGesture {
+        
+        switch (playerGesture, enemyGesture) {
+          case (let player, let enemy) where player == enemy:
             gameState = "draw"
-        } else if playerGesture == "rock" && enemyGesture == "paper" {
+          case ("rock", "paper"), ("paper", "scissors"), ("scissors", "rock"):
             gameState = "lose"
-        } else if playerGesture == "paper" && enemyGesture == "scissors" {
-            gameState = "lose"
-        } else if playerGesture == "scissors" && enemyGesture == "rock" {
-            gameState = "lose"
-        } else {
+          default:
             gameState = "win"
         }
+        
         switch gameState {
         case "start":
             gameStatusLabel.text = ""
